@@ -1,0 +1,4 @@
+# all python packages we need to install for our project
+
+django==2.2
+djangorestframework==3.9.2
