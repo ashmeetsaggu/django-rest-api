@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
+from django.conf import settings
 
 
 class UserProfileManager(BaseUserManager) :
@@ -22,7 +23,7 @@ class UserProfileManager(BaseUserManager) :
         user = self.create_user(email, name, password)
         user.is_superuser = True
         user.is_staff = True
-        user.save(using=self._db) 
+        user.save(using=self._db)
         return user
 
     #self is automatically passed inside () of a function if it is inside a class
@@ -52,5 +53,18 @@ class UserProfile(AbstractBaseUser, PermissionsMixin) :
         """convert the object of UserProfile into string"""
         return self.email
 
+
+class ProfileFeedItem(models.Model) :
+    """profile status update"""
+    user_profile = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete = models.CASCADE
+    )
+    status_text = models.CharField(max_length=255)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__ (self) :
+        """return model as string"""
+        return self.status_text
 
 # Create your models here.
